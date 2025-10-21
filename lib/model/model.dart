@@ -11,9 +11,11 @@ class Habit {
   final String name;
   final Days day;
   final bool isCompleted;
+  final DateTime date;
 
   Habit({
     required this.isCompleted,
+    required this.date,
     String? id,
     required this.name,
     required this.day,

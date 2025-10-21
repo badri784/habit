@@ -3,8 +3,13 @@ import 'package:habit/model/model.dart';
 
 class AddHabit extends StateNotifier<List<Habit>> {
   AddHabit() : super([]);
-  void add(String name, Days day, bool isdeone) {
-    final newitem = Habit(name: name, day: day, isCompleted: isdeone);
+  void add(String name, Days day, bool isdeone, DateTime date) {
+    final newitem = Habit(
+      name: name,
+      day: day,
+      isCompleted: isdeone,
+      date: date,
+    );
     state = [...state, newitem];
   }
 

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:habit/model/model.dart';
 import 'package:habit/provider/add_habit.dart';
+import 'package:habit/screens/open_screen.dart';
 
 class MakeHabit extends ConsumerStatefulWidget {
   const MakeHabit({super.key});
@@ -22,16 +23,17 @@ class _MakeHabitState extends ConsumerState<MakeHabit>
     tabController = TabController(length: Days.values.length, vsync: this);
   }
 
+  bool value = false;
+  late DateTime? _dateTime;
   @override
   void dispose() {
     tabController.dispose();
     super.dispose();
   }
 
-  Mode selectModel = Mode.normal;
+  Mode? selectModel;
   @override
   Widget build(BuildContext context) {
-    bool value = false;
     final item = ref.watch(addHabitNotifier);
     void showAddHabitDialog(Days day) {
       final TextEditingController habitController = TextEditingController();
@@ -113,7 +115,7 @@ class _MakeHabitState extends ConsumerState<MakeHabit>
                             final text = habitController.text;
                             ref
                                 .read(addHabitNotifier.notifier)
-                                .add(text, day, value);
+                                .add(text, day, value, _dateTime!);
                           }
                           Navigator.pop(context);
                         },
@@ -152,6 +154,11 @@ class _MakeHabitState extends ConsumerState<MakeHabit>
                 padding: const EdgeInsets.all(8.0),
                 child: Card.outlined(
                   child: ListTile(
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(builder: (_) => const OpenScreen()),
+                      );
+                    },
                     title: Row(
                       children: [
                         Expanded(child: Text(item[index].name, maxLines: 3)),
@@ -167,7 +174,34 @@ class _MakeHabitState extends ConsumerState<MakeHabit>
                                 color: Colors.black54,
                               ),
                             ),
-                            child: const Center(child: Text('Alarts')),
+                            child: Center(
+                              child: TextButton(
+                                onPressed: () async {
+                                  final firstDate = DateTime.now();
+                                  final lastDate = DateTime(
+                                    DateTime.now().year + 1,
+                                  );
+                                  final datepicker = await showDatePicker(
+                                    context: context,
+                                    firstDate: firstDate,
+                                    lastDate: lastDate,
+                                    initialDate: firstDate,
+                                  );
+                                  if (datepicker != null) {
+                                    setState(() {
+                                      _dateTime = datepicker;
+                                    });
+                                  } else {
+                                    return;
+                                  }
+                                },
+                                child: Text(
+                                  _dateTime == null
+                                      ? 'Pick a date'
+                                      : '$_dateTime'.split(' ')[0],
+                                ),
+                              ),
+                            ),
                           ),
                         ),
                       ],

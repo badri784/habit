@@ -10,7 +10,7 @@ import '../screens/yourstuff.dart';
 class NavBar extends ConsumerWidget {
   NavBar({super.key});
 
-  final List<Widget> _screens = [
+  final _screens = <Widget>[
     const Home(),
     const Explore(),
     const MyWidget(),
